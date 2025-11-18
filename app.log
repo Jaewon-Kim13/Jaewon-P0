@@ -1,0 +1,39 @@
+2025-11-18 14:24:06 - expense - INFO - User(7): Creating new expense
+2025-11-18 14:24:11 - expense - INFO - User(7): Successfully Created new expense
+2025-11-18 14:24:19 - expense - INFO - User(id:7): Viewing their expenses
+2025-11-18 14:24:19 - expense - INFO - User(id:7): Successfully Viewed their expenses
+2025-11-18 14:24:24 - expense - INFO - User(id:7): Getting expense(id:6)
+2025-11-18 14:24:24 - expense - INFO - User(id:7): Successfully got expense(id:6)
+2025-11-18 14:24:39 - expense - INFO - User(id:7): Getting expense(id:6)
+2025-11-18 14:24:39 - expense - INFO - User(id:7): Successfully got expense(id:6)
+2025-11-18 14:26:25 - expense - INFO - User(id:7): Viewing their expenses
+2025-11-18 14:26:25 - expense - INFO - User(id:7): Successfully Viewed their expenses
+2025-11-18 14:26:31 - expense - INFO - User(id:7): Updating expense(id:6)
+2025-11-18 14:33:51 - user - INFO - User attempting to login
+2025-11-18 14:33:53 - user - ERROR - Failed to login user
+2025-11-18 14:33:59 - user - INFO - Creating new user
+2025-11-18 14:34:04 - user - INFO - Successfully created new User(id:8)
+2025-11-18 14:34:10 - expense - INFO - User(id:8): Creating new expense
+2025-11-18 14:34:12 - approvals - INFO - Creating new Approval for Expense(id:7)
+2025-11-18 14:34:12 - approvals - INFO - Successfully Creating new Approval for Expense(id:7)
+2025-11-18 14:34:12 - expense - INFO - User(id:8): Successfully Created new expense
+2025-11-18 14:34:19 - expense - INFO - User(id:8): Viewing their expenses
+2025-11-18 14:34:19 - expense - ERROR - User(id:8): Failed to View their expenses
+2025-11-18 14:35:43 - user - INFO - User attempting to login
+2025-11-18 14:35:45 - user - ERROR - Failed to login user
+2025-11-18 14:35:47 - user - INFO - Creating new user
+2025-11-18 14:35:51 - user - INFO - Successfully created new User(id:9)
+2025-11-18 14:35:54 - expense - INFO - User(id:9): Creating new expense
+2025-11-18 14:35:56 - expense - ERROR - User(id:9): Failed to Create new expense
+2025-11-18 14:36:02 - expense - INFO - User(id:9): Creating new expense
+2025-11-18 14:36:48 - user - INFO - Creating new user
+2025-11-18 14:36:51 - user - INFO - Successfully created new User(id:10)
+2025-11-18 14:36:56 - expense - INFO - User(id:10): Creating new expense
+2025-11-18 14:37:02 - approvals - INFO - Creating new Approval for Expense(id:8)
+2025-11-18 14:37:02 - approvals - INFO - Successfully Creating new Approval for Expense(id:8)
+2025-11-18 14:37:02 - expense - INFO - User(id:10): Successfully Created new expense
+2025-11-18 14:37:03 - expense - INFO - User(id:10): Viewing their expenses
+2025-11-18 14:37:03 - expense - INFO - User(id:10): Successfully Viewed their expenses
+2025-11-18 14:37:11 - expense - INFO - User(id:10): Updating expense(id:8)
+2025-11-18 14:37:11 - expense - INFO - User(id:10): Getting expense(id:8)
+2025-11-18 14:37:11 - expense - ERROR - User(id:10): Failed to get expense(id:8)
