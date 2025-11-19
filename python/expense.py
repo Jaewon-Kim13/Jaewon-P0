@@ -9,11 +9,13 @@ class Expense:
         self.id = id
         self.user_id = user_id
         self.date = date if date else datetime.datetime.now().date().isoformat()
-        self.amount = amount
+        self.amount = float(amount)
         self.description = description
     
     def validate(self):
         if self.amount < 0:
+            return False
+        if self.description is None or self.description:
             return False
         return True
     
@@ -28,8 +30,11 @@ def create_expense(conn, cursor, my_id):
     amount = input("Enter amount:")
     description = input("Enter description:")
     expense = Expense(None, user_id, amount, description)
-    
+
     try:
+        if expense.validate():
+            raise ValueError()        
+        
         cursor.execute("""
             INSERT INTO expenses (expense_date, amount, expense_description, user_id)
             VALUES(?,?,?,?)
@@ -117,6 +122,8 @@ def update_pending_or_denied_expense(conn, cursor, my_id, id):
     description = input("Updated description:")
     expense = Expense(id, user_id, amount, description)
     try:
+        if expense.validate():
+            raise ValueError() 
         cursor.execute('''
             UPDATE expenses
             SET expense_date = ?, amount = ?, expense_description = ?
