@@ -60,7 +60,7 @@ def get_expense_and_status(conn, cursor, id, my_id):
             FROM expenses e
             INNER JOIN approvals a ON e.id = a.expense_id
             WHERE e.id = ?;
-        """, (id))
+        """, (id,))
         result = cursor.fetchone()
         expense = Expense(result[0], result[1], result[2], result[3], result[4])
         status = result[5]

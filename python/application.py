@@ -15,7 +15,7 @@ def db_init():
     conn = sqlite3.connect("persist.db")
     cursor = conn.cursor()
     
-    with open('/home/user/rev/p0/python/schema.sql', 'r') as f:
+    with open('/home/user/rev/p0/schema.sql', 'r') as f:
         sql_script = f.read()
         cursor.executescript(sql_script)
 
