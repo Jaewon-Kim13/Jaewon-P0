@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS expenses (
     amount REAL NOT NULL CHECK(amount > 0),
     expense_description TEXT NOT NULL,
     expense_date TEXT NOT NULL,
+    category TEXT,
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 

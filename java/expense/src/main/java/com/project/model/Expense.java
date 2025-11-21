@@ -12,5 +12,6 @@ public class Expense {
     private int userId;
     private double amount;
     private String description;
+    private String category;
     private Date date;
 }

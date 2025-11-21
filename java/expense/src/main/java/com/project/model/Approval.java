@@ -13,5 +13,5 @@ public class Approval {
     private String status;
     private int reviewer;
     private String comment;
-    private Date role;
+    private Date reviewDate;
 }

@@ -5,12 +5,13 @@ import logging
 logger = logging.getLogger(__name__)
 
 class Expense:
-    def __init__(self, id, user_id, amount, description, date=None):
+    def __init__(self, id, user_id, amount, description, date=None, category=None):
         self.id = id
         self.user_id = user_id
         self.date = date if date else datetime.datetime.now().date().isoformat()
         self.amount = float(amount)
         self.description = description
+        self.category = category
     
     def validate(self):
         if self.amount < 0:
@@ -20,7 +21,7 @@ class Expense:
         return True
     
     def __str__(self):
-        return f"Expense(ID: {self.id}, User: {self.user_id}, Amount: ${self.amount:.2f}, Description: '{self.description}', Date: {self.date})"
+        return f"Expense(ID: {self.id}, User: {self.user_id}, Amount: ${self.amount:.2f}, Description: '{self.description}', Date: {self.date}, Category: {self.category})"
     
     
 #creates expense and corresponding approval!   
@@ -29,16 +30,17 @@ def create_expense(conn, cursor, my_id):
     user_id = my_id
     amount = input("Enter amount:")
     description = input("Enter description:")
-    expense = Expense(None, user_id, amount, description)
+    category = input("Enter category:")
+    expense = Expense(None, user_id, amount, description, category=category)
 
     try:
         if expense.validate():
             raise ValueError()        
         
         cursor.execute("""
-            INSERT INTO expenses (expense_date, amount, expense_description, user_id)
-            VALUES(?,?,?,?)
-        """, (expense.date, float(expense.amount), expense.description, expense.user_id))
+            INSERT INTO expenses (expense_date, amount, expense_description, user_id, category)
+            VALUES(?,?,?,?,?)
+        """, (expense.date, float(expense.amount), expense.description, expense.user_id, expense.category))
         conn.commit()
         
         
@@ -61,13 +63,14 @@ def get_expense_and_status(conn, cursor, id, my_id):
                 e.amount,
                 e.expense_description,
                 e.expense_date,
-                a.approval_status
+                a.approval_status,
+                e.category
             FROM expenses e
             INNER JOIN approvals a ON e.id = a.expense_id
             WHERE e.id = ?;
         """, (id,))
         result = cursor.fetchone()
-        expense = Expense(result[0], result[1], result[2], result[3], result[4])
+        expense = Expense(result[0], result[1], result[2], result[3], result[4], result[6])
         status = result[5]
         logger.info(f"User(id:{my_id}): Successfully got expense(id:{id})")
         return expense, status
@@ -87,7 +90,8 @@ def view_expense_and_status_by_user_id(conn, cursor, user_id):
                 e.amount,
                 e.expense_description,
                 e.expense_date,
-                a.approval_status
+                a.approval_status,
+                e.category
             FROM expenses e
             INNER JOIN approvals a ON e.id = a.expense_id
             WHERE e.user_id = ?;
@@ -100,7 +104,7 @@ def view_expense_and_status_by_user_id(conn, cursor, user_id):
             return
        
         for row in results:
-            print(f"Expense ID: {row[0]} Amount: ${row[2]:.2f} Description: {row[3]} Date: {row[4]} Status: {row[5]}")
+            print(f"Expense ID: {row[0]} Amount: ${row[2]:.2f} Description: {row[3]} Date: {row[4]} Status: {row[5]} Category: {row[6]}")
         logger.info(f"User(id:{user_id}): Successfully Viewed their expenses")
     except Exception as e:
         print("Failed to fetch from the database:", e)
@@ -109,8 +113,8 @@ def view_expense_and_status_by_user_id(conn, cursor, user_id):
 def update_pending_or_denied_expense(conn, cursor, my_id, id):
     logger.info(f"User(id:{my_id}): Updating expense(id:{id})")
     my_expense, status = get_expense_and_status(conn, cursor, id, my_id)
-    if status == "approved":
-        print("Cannot edit approved expenses!")
+    if status == "approved" or status == "denied":
+        print("Cannot edit approved/denied expenses!")
         return
     if(my_expense == None):
         print("Expense Doesn't Not Exist For User")
@@ -120,15 +124,16 @@ def update_pending_or_denied_expense(conn, cursor, my_id, id):
     user_id = my_id
     amount = input("Update amount:")
     description = input("Updated description:")
-    expense = Expense(id, user_id, amount, description)
+    category = input("Updated category:")
+    expense = Expense(id, user_id, amount, description, category=category)
     try:
         if expense.validate():
             raise ValueError() 
         cursor.execute('''
             UPDATE expenses
-            SET expense_date = ?, amount = ?, expense_description = ?
+            SET expense_date = ?, amount = ?, expense_description = ?, category = ?
             WHERE id = ?
-        ''', (expense.date, float(expense.amount), expense.description, expense.id))
+        ''', (expense.date, float(expense.amount), expense.description, expense.category, expense.id))
         conn.commit()
         logger.info(f"User(id:{my_id}): Successfully Updated expense(id:{id})")
         print("Successfully updated expense(id):",id)
