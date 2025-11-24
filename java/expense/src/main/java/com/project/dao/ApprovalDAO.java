@@ -5,7 +5,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 
-import com.project.Database;
+import com.project.util.Database;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,10 +13,10 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ApprovalDAO {
-    public static String updateApproval(int managerId, int expenseId, String status, String comment){
+    public boolean updateApproval(int managerId, int expenseId, String status, String comment){
         String sql = "UPDATE approval SET reviewer=?, approval_status=?, conmment=?, review_date=?, WHERE expense_id=?";
+        Connection connection = Database.getConnection();
         try{
-            Connection connection = Database.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
             preparedStatement.setInt(1, managerId);
             preparedStatement.setString(2, status);
@@ -27,9 +27,9 @@ public class ApprovalDAO {
             int rowsAffected = preparedStatement.executeUpdate();
             if(rowsAffected == 0) throw new Exception("Tried to update non-existant record!");
 
-            return "Approval Updated Successfully!";
+            return true;
         } catch (Exception e) {
-            return "Approval Update Failed: "+e.getMessage();
+            return false;
         }
     }
 }

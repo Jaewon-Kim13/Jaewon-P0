@@ -1,7 +1,5 @@
 package com.project.model;
 
-import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,5 +11,5 @@ public class Expense {
     private double amount;
     private String description;
     private String category;
-    private Date date;
+    private String date;
 }

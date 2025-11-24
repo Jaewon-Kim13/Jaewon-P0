@@ -12,7 +12,7 @@ logging.basicConfig(
 )
 
 def db_init():
-    conn = sqlite3.connect("persist.db")
+    conn = sqlite3.connect("/home/user/rev/p0/persist.db")
     cursor = conn.cursor()
     
     with open('/home/user/rev/p0/schema.sql', 'r') as f:

@@ -1,4 +1,4 @@
-package com.project;
+package com.project.util;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -14,14 +14,15 @@ public class Database {
     public static Connection getConnection() {
         if(connection != null) return connection;
         try {
-            connection = DriverManager.getConnection("jdbc:sqlite:../persist.db");
+            connection = DriverManager.getConnection("jdbc:sqlite:/home/user/rev/p0/persist.db");
+            loadSQLFile("/home/user/rev/p0/schema.sql");
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return connection;
     }
 
-    public static void loadSQLFile(String filePath) {
+    private static void loadSQLFile(String filePath) {
         Connection conn = getConnection();
         StringBuilder sql = new StringBuilder();
         
