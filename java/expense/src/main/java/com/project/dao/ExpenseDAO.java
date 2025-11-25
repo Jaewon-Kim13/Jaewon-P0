@@ -73,7 +73,7 @@ public class ExpenseDAO {
         try {
             PreparedStatement ps;
             switch(option) {
-                case "employee" -> {
+                case "employee_id" -> {
                     sql += "WHERE e.user_id = ?";
                     ps = connection.prepareStatement(sql);
                     ps.setInt(1, Integer.parseInt(parameter));
