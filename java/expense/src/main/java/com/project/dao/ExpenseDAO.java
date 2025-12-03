@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.project.model.Approval;
 import com.project.model.Expense;
 import com.project.util.Database;
@@ -18,7 +21,10 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class ExpenseDAO {
-        public List<Expense> viewPendingApprovals(){
+    private static final Logger logger = LoggerFactory.getLogger(ExpenseDAO.class);
+    
+    public List<Expense> viewPendingApprovals(){
+        logger.info("Fetching pending approvals");
         ArrayList<Expense> pending = new ArrayList<>();
         String sql = "SELECT "
                     +"e.id, "
@@ -46,13 +52,15 @@ public class ExpenseDAO {
                 );
                 pending.add(expense);
             }
+            logger.info("Found {} pending approvals", pending.size());
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("Failed to fetch pending approvals", e);
         }
         return pending;
     }
 
     public HashMap<Expense, Approval> generateReport(String option, String parameter) throws Exception {
+        logger.info("Generating report - option: {}, parameter: {}", option, parameter);
         HashMap<Expense, Approval> report = new HashMap<>();
         
         String sql = "SELECT "
@@ -84,12 +92,15 @@ public class ExpenseDAO {
                     ps.setString(1, parameter);
                 }
                 case "date" -> {
-                    sql += "WHERE e.expense_date = ?";  // Fixed column name
+                    sql += "WHERE e.expense_date = ?";
                     ps = connection.prepareStatement(sql);
-                    ps.setDate(1, java.sql.Date.valueOf(parameter)); // Better date handling
+                    ps.setString(1, parameter);
                 }
                     
-                default -> throw new Exception("Invalid selection: " + option);
+                default -> {
+                    logger.warn("Invalid report option attempted: {}", option);
+                    throw new Exception("Invalid selection: " + option);
+                }
             }
             
             ResultSet rs = ps.executeQuery();
@@ -110,14 +121,20 @@ public class ExpenseDAO {
                     rs.getString(8),   // a.approval_status
                     rs.getInt(9),      // a.reviewer
                     rs.getString(10),  // a.comment
-                    rs.getDate(11)     // a.review_date
+                    rs.getString(11)     // a.review_date
                 );
                 
                 report.put(expense, approval);
             }
             
+            logger.info("Report generated successfully with {} entries", report.size());
+            
         } catch (SQLException e) {
+            logger.error("Database error while generating report", e);
             throw new Exception("Database error while generating report: " + e.getMessage(), e);
+        } catch (NumberFormatException e){
+            logger.error("Invalid number format for parameter: {}", parameter, e);
+            throw new Exception("Enter Valid Values!");
         }
 
         return report;

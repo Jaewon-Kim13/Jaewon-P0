@@ -16,17 +16,23 @@ public class Main {
         int userId = -1;
 
         app: while(true){
-            System.out.println("""
-                               Welcome to Manager Suite:
-                               1.)Login
-                               2.)Create Account
-                               3.)Exit""");
+            System.out.println(
+            """
+            ---------------------------
+             Welcome to Manager Suite:
+            ---------------------------
+                1.)Login
+                2.)Create Account
+                3.)Exit
+            ---------------------------
+            """);
+            System.out.print("Enter Selection: ");
             String input = scanner.nextLine();
             switch(input){
                 case("1")->{
-                    System.out.println("Enter Username: ");
+                    System.out.print("\nEnter Username: ");
                     String username = scanner.nextLine();
-                    System.out.println("Enter Password: ");
+                    System.out.print("Enter Password: ");
                     String password = scanner.nextLine();
                     userId = userService.login(username, password);
                     if(userId == -1){
@@ -36,13 +42,13 @@ public class Main {
                     break app;
                 }
                 case("2")->{
-                    System.out.println("Enter Username: ");
+                    System.out.print("Enter Username: ");
                     String username = scanner.nextLine();
-                    System.out.println("Enter Password: ");
+                    System.out.print("Enter Password: ");
                     String password = scanner.nextLine();
                     userId = userService.createManager(username, password);
                     if(userId == -1){
-                        System.out.println("Login failed");
+                        System.out.println("Login failed: Incorrect username/password");
                         continue;
                     }
                     break app;
@@ -51,7 +57,7 @@ public class Main {
                     System.exit(0);
                 }
                 default->{
-                    System.out.println("");
+                    System.out.println("Invalid Selction!");
                 }
             }
         }
@@ -60,32 +66,44 @@ public class Main {
 
         main: while (true){
             System.out.println("""
+            \n----------------------------------
                 Welcome to the Manager app:
+            ----------------------------------
                 1.)View All Pending Expenses
                 2.)Generate Reports
                 3.)Update Expense Aproval
                 4.)Exit
+            ----------------------------------
             """);
+            System.out.print("Enter Selection: ");
             String input = scanner.nextLine();
             switch(input){
                 case("1")->{
                     expenseService.viewPendingApprovals();
                 }
                 case("2")->{
-                    System.out.println("Enter Option(date, employee_id, category): ");
+                    System.out.print("Enter Option(date, employee_id, category): ");
                     String option = scanner.nextLine();
-                    System.out.println("Enter value: ");
+                    if(option.equals("date")){
+                        System.out.print("Enter value(YYYY-MM-DD): ");
+                    }
+                    System.out.print("Enter value: ");
                     String parameter = scanner.nextLine();
                     expenseService.generateReport(option, parameter);
                 }
                 case("3")->{
-                    System.out.println("Enter Expense_id: ");
-                    int expenseID = Integer.parseInt(scanner.nextLine());
-                    System.out.println("Enter status(approved|denied): ");
-                    String status = scanner.nextLine();
-                    System.out.println("Enter comment: ");
-                    String comment = scanner.nextLine();
+                    try {
+                        System.out.println("Enter Expense_id(#): ");
+                        int expenseID = Integer.parseInt(scanner.nextLine());
+                        System.out.println("Enter status(approved|denied): ");
+                        String status = scanner.nextLine();
+                        System.out.println("Enter comment: ");
+                        String comment = scanner.nextLine();
                     approvalService.updateApproval(userId,expenseID, status, comment);
+                    } catch (Exception e) {
+                        System.out.println("Enter Valid Input");
+                    }
+                    
                 }
                 case("4")->{break main;}
                 default->{}

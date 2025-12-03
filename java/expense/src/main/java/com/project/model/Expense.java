@@ -1,5 +1,7 @@
 package com.project.model;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -12,4 +14,9 @@ public class Expense {
     private String description;
     private String category;
     private String date;
+
+    public static void printExpenseTable(List<Expense> expenses) {
+        
+    }
+
 }

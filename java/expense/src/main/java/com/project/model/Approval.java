@@ -1,7 +1,5 @@
 package com.project.model;
 
-import java.util.Date;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -13,5 +11,5 @@ public class Approval {
     private String status;
     private int reviewer;
     private String comment;
-    private Date reviewDate;
+    private String reviewDate;
 }
