@@ -19,7 +19,9 @@ def db_init():
         password="userpassword",
         database="database"
     )
-    cursor = conn.cursor()
+    cursor = conn.cursor(buffered=True)  # Add buffered=True
+    conn.commit()
+    return conn, cursor
     
     # with open('/home/user/rev/p0/schema.sql', 'r') as f:
     #     sql_script = f.read()

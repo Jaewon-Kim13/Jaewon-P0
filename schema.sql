@@ -27,3 +27,11 @@ CREATE TABLE IF NOT EXISTS approvals (
     FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE CASCADE,
     FOREIGN KEY (reviewer) REFERENCES users(id) ON DELETE SET NULL
 );
+
+SELECT 
+    CONCAT('KILL ', ID, ';') AS kill_command
+FROM 
+    INFORMATION_SCHEMA.PROCESSLIST
+WHERE 
+    DB = 'database'
+    AND ID != CONNECTION_ID();
