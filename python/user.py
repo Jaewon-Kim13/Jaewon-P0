@@ -1,8 +1,5 @@
-import sqlite3
 import logging
-
 logger = logging.getLogger(__name__)
-
 class User:
     def __init__(self, id, username, password, role):
         self.id = id
@@ -18,7 +15,7 @@ def create_user(conn, cursor):
     try:
         cursor.execute("""
             INSERT INTO users (username, user_password, user_role)
-            VALUES(?,?,?)
+            VALUES(%s, %s, %s)
         """, (username, password, 'Employee'))
         conn.commit()
         print("Successfully added new User to the database:")
@@ -38,7 +35,7 @@ def login(conn, cursor):
     
     try:
         cursor.execute("""
-            Select id FROM users WHERE username=? AND user_password=?
+            SELECT id FROM users WHERE username=%s AND user_password=%s
         """, (username, password))
         conn.commit()
         result = cursor.fetchone()[0]
@@ -46,6 +43,6 @@ def login(conn, cursor):
         logger.info(f"User(id:{result}): Successfully logged in")
         return result
     except Exception as e:
-        print("User Login failed:",e)
+        print("User Login failed:","Incorrect username/password")
         logger.error("Failed to login user")
         return -1

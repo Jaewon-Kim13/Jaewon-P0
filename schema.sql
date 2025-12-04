@@ -1,30 +1,29 @@
+-- Active: 1764822103861@@127.0.0.1@3306@database
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    username TEXT NOT NULL UNIQUE,
-    user_password TEXT NOT NULL,
-    user_role TEXT NOT NULL CHECK(user_role IN ('Employee', 'Manager'))
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(255) NOT NULL UNIQUE,
+    user_password VARCHAR(255) NOT NULL,
+    user_role ENUM('Employee', 'Manager') NOT NULL
 );
 
--- Expenses table
 CREATE TABLE IF NOT EXISTS expenses (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id INTEGER NOT NULL,
-    amount REAL NOT NULL CHECK(amount > 0),
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    amount DECIMAL(10, 2) NOT NULL CHECK(amount > 0),
     expense_description TEXT NOT NULL,
-    expense_date TEXT NOT NULL,
-    category TEXT,
+    expense_date DATE NOT NULL,
+    category VARCHAR(100),
     FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
--- Approvals table
 CREATE TABLE IF NOT EXISTS approvals (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    expense_id INTEGER NOT NULL UNIQUE,
-    approval_status TEXT NOT NULL DEFAULT 'pending' CHECK(approval_status IN ('pending', 'approved', 'denied')),
-    reviewer INTEGER,
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    expense_id INT NOT NULL UNIQUE,
+    approval_status ENUM('pending', 'approved', 'denied') NOT NULL DEFAULT 'pending',
+    reviewer INT,
     comment TEXT,
-    review_date TEXT,
+    review_date DATETIME,
     FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE CASCADE,
     FOREIGN KEY (reviewer) REFERENCES users(id) ON DELETE SET NULL
 );

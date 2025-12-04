@@ -1,4 +1,4 @@
-import sqlite3
+import mysql.connector
 import sys
 import user
 import expense
@@ -12,12 +12,23 @@ logging.basicConfig(
 )
 
 def db_init():
-    conn = sqlite3.connect("/home/user/rev/p0/persist.db")
+    conn = mysql.connector.connect(
+        host="localhost",
+        port=3306,
+        user="user",
+        password="userpassword",
+        database="database"
+    )
     cursor = conn.cursor()
     
-    with open('/home/user/rev/p0/schema.sql', 'r') as f:
-        sql_script = f.read()
-        cursor.executescript(sql_script)
+    # with open('/home/user/rev/p0/schema.sql', 'r') as f:
+    #     sql_script = f.read()
+    #     # Split by semicolons and execute each statement separately
+    #     statements = sql_script.split(';')
+    #     for statement in statements:
+    #         statement = statement.strip()
+    #         if statement:  # Skip empty statements
+    #             cursor.execute(statement)
 
     conn.commit()
     return conn, cursor
@@ -26,71 +37,84 @@ def main():
     conn, cursor = db_init()
     user_id = -1
     while(True):
-        print("----------Menu----------")
+        print(f"\n{'='*40}")
         print("Welcome to User Expense Manager!")
-        print("1.)Create new user")
-        print("2.)Login new user")
-        print("3.)Exit")
-        print("------------------------\n")
+        print(f"{'='*40}")
+        print("1.) Create new user")
+        print("2.) Login new user")
+        print("3.) Exit")
+        print(f"{'='*40}\n")
         choice = input("Enter selection: ")
         match choice:
             case "1":
-                print("\n++++++++++++++++++++")
+                print()
                 user_id = user.create_user(conn, cursor)
-                print("++++++++++++++++++++")
             case "2":
-                print("\n++++++++++++++++++++")
+                print()
                 user_id = user.login(conn, cursor)
-                print("++++++++++++++++++++")
             case "3":
+                if cursor:
+                    cursor.close()
+                if conn:
+                    conn.close()
                 sys.exit(0)
             case _:
-                print("Invalid Choice")
+                print("Invalid choice")
         
         if(user_id == -1): continue
-        else:break
+        else: break
         
     while(True):
-        print("----------Menu----------")
-        print("1.)Create Expense")
-        print("2.)Get Expense by ID")
-        print("3.)View all my expenses")
-        print("4.)Update pending/denied expenses")
-        print("5.)Delete pending/denied expenses")
-        print("6.)Exit")
-        print("------------------------\n")
-        choice = input("Enter Menu Option:")
+        print(f"\n{'='*40}")
+        print("Expense Management Menu")
+        print(f"{'='*40}")
+        print("1.) Create expense")
+        print("2.) Get expense by ID")
+        print("3.) View all my expenses")
+        print("4.) Update pending expenses")
+        print("5.) Delete pending expenses")
+        print("6.) Exit")
+        print(f"{'='*40}\n")
+        choice = input("Enter menu option: ")
         match choice:
             case "1":
-                print("\n++++++++++++++++++++")
+                print()
                 expense.create_expense(conn, cursor, user_id)
-                print("++++++++++++++++++++")
             case "2":
-                print("\n++++++++++++++++++++")
-                id = int(input("Enter expense id:"))
-                my_expense, status = expense.get_expense_and_status(conn, cursor,id, user_id)
-                print(my_expense, status)
-                print("++++++++++++++++++++")
+                try:
+                    print()
+                    id = int(input("Enter expense ID: "))
+                    my_expense, status = expense.get_expense_and_status(conn, cursor, id, user_id)
+                    print(f"\n{my_expense}")
+                    print(f"Status: {status}")
+                except Exception as e:
+                    print("Enter Valid input!")
             case "3":
-                print("\n++++++++++++++++++++")
+                print()
                 expense.view_expense_and_status_by_user_id(conn, cursor, user_id)
-                print("++++++++++++++++++++")
             case "4":
-                print("\n++++++++++++++++++++")
-                id = int(input("Enter expense id:"))
-                expense.update_pending_or_denied_expense(conn, cursor, user_id, id)
-                print("++++++++++++++++++++")
+                try:
+                    print()
+                    id = int(input("Enter expense ID: "))
+                    expense.update_pending_or_denied_expense(conn, cursor, user_id, id)
+                except Exception as e:
+                    print("Enter Valid input!")
+                
             case "5":
-                print("\n++++++++++++++++++++")
-                id = int(input("Enter expense id:"))
-                expense.delete_pending_or_denied_expense(conn, cursor, id, user_id)
-                print("++++++++++++++++++++")
+                try:
+                    print()
+                    id = int(input("Enter expense ID: "))
+                    expense.delete_pending_or_denied_expense(conn, cursor, id, user_id)
+                except Exception as e:
+                    print("Enter Valid input!")
             case "6":
+                if cursor:
+                    cursor.close()
+                if conn:
+                    conn.close()
                 sys.exit(0)
             case _:
-                print("\n++++++++++++++++++++")
-                print("Invalid Choice")
-                print("++++++++++++++++++++")
+                print("\nInvalid choice")
         
 if __name__ == "__main__":
     main()

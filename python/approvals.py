@@ -17,7 +17,7 @@ def create_approval(conn, cursor, expense_id, status):
     try:
         cursor.execute("""
             INSERT INTO approvals (expense_id, approval_status)
-            VALUES(?,?)
+            VALUES(%s, %s)
         """, (expense_id, status))
         conn.commit()
         logger.info(f"Successfully Creating new Approval for Expense(id:{expense_id})")
