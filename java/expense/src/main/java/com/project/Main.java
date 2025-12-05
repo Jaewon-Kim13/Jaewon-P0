@@ -117,7 +117,7 @@ public class Main {
                         String status = scanner.nextLine();
                         System.out.print("Enter comment: ");
                         String comment = scanner.nextLine();
-                        approvalService.updateApproval(userId, expenseID, status, comment);
+                        approvalService.updateApproval(expenseID, userId, status, comment);
                     } catch (Exception e) {
                         logger.error("Invalid input during approval update", e);
                         System.out.println("Enter Valid Input");

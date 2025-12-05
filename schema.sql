@@ -23,7 +23,7 @@ CREATE TABLE IF NOT EXISTS approvals (
     approval_status ENUM('pending', 'approved', 'denied') NOT NULL DEFAULT 'pending',
     reviewer INT,
     comment TEXT,
-    review_date DATETIME,
+    review_date DATE,
     FOREIGN KEY (expense_id) REFERENCES expenses(id) ON DELETE CASCADE,
     FOREIGN KEY (reviewer) REFERENCES users(id) ON DELETE SET NULL
 );

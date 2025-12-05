@@ -25,7 +25,7 @@ public class ApprovalDAO {
         Connection connection = Database.getConnection();
 
         LocalDate currentDate = LocalDate.now();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         String formattedDateString = currentDate.format(formatter);
         try{
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
